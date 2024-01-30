@@ -9,7 +9,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from accelerate import FullyShardedDataParallelPlugin, Accelerator
 from torch.distributed.fsdp.fully_sharded_data_parallel import FullOptimStateDictConfig, FullStateDictConfig
 from datasets import load_dataset
-from models import set_status, create_session
+# from models import set_status, create_session
+from huggingface_hub import create_repo
 
 fsdp_plugin = FullyShardedDataParallelPlugin(
     state_dict_config=FullStateDictConfig(
@@ -41,16 +42,17 @@ def main():
         # parser.add_argument(
         #     '--output', default='default_input.txt', help='Path to output file')
         parser.add_argument(
-            '--final_model', default='0to60ai/first', help='Path to output file')
+            '--final_model', default='0to60ai/second', help='Path to output file')
         parser.add_argument(
             '--database_url', default="mysql+pymysql://root:12345@localhost:3306/bruData?charset=utf8mb4", help='SQL url')
         
         args = parser.parse_args()
 
-        repo_name = args['final_model']
-
-        create_session(args['database_url'])
-        set_status(args['job_id'], 'base model loading started')
+        repo_name = args.final_model
+        create_repo(repo_name, private=True, exist_ok=True)
+        print(repo_name)
+        # create_session(args['database_url'])
+        # set_status(args['job_id'], 'base model loading started')
 
         base_model_id = "SkunkworksAI/phi-2"
         model = AutoModelForCausalLM.from_pretrained(
@@ -65,7 +67,7 @@ def main():
             use_fast=False,  # needed for now, should be fixed soon
         )
         tokenizer.pad_token = tokenizer.eos_token
-        set_status(args['job_id'], 'dataset loading started')
+        # set_status(args['job_id'], 'dataset loading started')
         # -------------------
 
         data = ['Instruct: Create a new experiment named "MLflowDemo" with a custom artifact location..\nOutput: <<<api_call>>>: 2.0/mlflow/experiments/create\n<<<api_call_type>>>: POST\n<<<params>>>: {\n    "name": "MLflowDemo",\n    "artifact_location": "/custom/location"\n}\n<<<explanation>>>: This API call creates a new MLflow experiment named "MLflowDemo" with a custom artifact location set to "/custom/location".. <s>',
@@ -110,7 +112,7 @@ def main():
 
         # -----------------
 
-        set_status(args['job_id'], 'configuring lora settings')
+        # set_status(args.job_id, 'configuring lora settings')
 
         config = LoraConfig(
             r=32,
@@ -139,7 +141,7 @@ def main():
         model = accelerator.prepare_model(model)
 
         # -------
-        set_status(args['job_id'], 'training started')
+        # set_status(args['job_id'], 'training started')
 
         if torch.cuda.device_count() > 1:  # If more than 1 GPU
             model.is_parallelizable = True
@@ -167,8 +169,8 @@ def main():
                 eval_steps=25,               # Evaluate and save checkpoints every 50 steps
                 do_eval=True,                # Perform evaluation at the end of training
                 overwrite_output_dir = 'True',
-                load_best_model_at_end=False,
-                save_strategy = "no",
+                save_strategy="steps",       # Save the model checkpoint every logging step
+                save_steps=10, 
                 save_total_limit = 1,
                 run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
             ),
@@ -180,12 +182,14 @@ def main():
         model.config.use_cache = False
         trainer.train()
 
-        set_status(args['job_id'], 'saving model')
+        # set_status(args['job_id'], 'saving model')
         trainer.model.push_to_hub(repo_name)
-        set_status(args['job_id'], 'training finished')
+        trainer.tokenizer.push_to_hub(repo_name)
+        # set_status(args['job_id'], 'training finished')
         
     except Exception as e:
-        set_status(args['job_id'], f'error : {e[:200]}')
+        print(e)
+        # set_status(args['job_id'], f'error : {e[:200]}')
 
 if __name__ == '__main__':
     main()
