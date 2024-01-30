@@ -183,8 +183,29 @@ def main():
         trainer.train()
 
         # set_status(args['job_id'], 'saving model')
-        trainer.model.push_to_hub(repo_name)
-        trainer.tokenizer.push_to_hub(repo_name)
+        base_model_id = "SkunkworksAI/phi-2"#"microsoft/phi-2"
+        base_model = AutoModelForCausalLM.from_pretrained(
+            base_model_id,  # Phi2, same as before
+            device_map="auto",
+            trust_remote_code=True,
+            load_in_8bit=True,
+        
+            torch_dtype=torch.float16,
+        )
+        
+        eval_tokenizer = AutoTokenizer.from_pretrained(base_model_id, add_bos_token=True, trust_remote_code=True, use_fast=False)
+        eval_tokenizer.pad_token = eval_tokenizer.eos_token
+
+        del trainer, model
+        from peft import PeftModel
+        path = os.listdir(run_name)[-1]
+        print(run_name+ '/'+path)
+        
+        ft_model = PeftModel.from_pretrained(base_model, run_name+ '/'+path)
+        ft_model.push_to_hub(repo_id = repo_name)
+        print('****')
+        eval_tokenizer.push_to_hub(repo_id = repo_name)
+        print('finished')
         # set_status(args['job_id'], 'training finished')
         
     except Exception as e:
