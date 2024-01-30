@@ -1,7 +1,7 @@
 bitsandbytes==0.42.0
-transformers==4.38.0.dev0
-peft==0.7.2.dev0
-accelerate==0.27.0.dev0
+git+https://github.com/huggingface/transformers.git
+git+https://github.com/huggingface/peft.git
+git+https://github.com/huggingface/accelerate.git
 datasets==2.16.1
 scipy==1.12.0
 ipywidgets==8.1.1
