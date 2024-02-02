@@ -29,15 +29,15 @@ def main():
     parser.add_argument('--train_data', help='train data')
     parser.add_argument('--val_data', help='val data')
     parser.add_argument(
-        '--lora_rank', default='32', help='LoRA Rank')
+        '--lora_rank', default='16', help='LoRA Rank')
     parser.add_argument(
-        '--epochs', default='10', help='Train epochs')
+        '--epochs', default='5', help='Train epochs')
     parser.add_argument(
-        '--batch', default='16', help='train batch size')
+        '--batch', default='2', help='train batch size')
     parser.add_argument(
         '--learning_rate', default=2.3e-5, help='learning rate')
     parser.add_argument(
-        '--final_model', default='0to60ai/second', help='Path to output file')
+        '--final_model', help='Path to output file')
     parser.add_argument(
         '--max_length', default='512', help='max length of training data.')
     parser.add_argument(
