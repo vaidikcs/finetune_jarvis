@@ -72,10 +72,18 @@ def main():
     # set_status(args['job_id'], 'dataset loading started')
     # -------------------
     try:
+        def create_prompt(prompt):
+            query = prompt['question']
+            answer = prompt['answer']
+            return {'text': f"Instruct: {query}.\nOutput: {answer}. <s>"}
+        
         train_data = str(args.train_data)
         val_data = str(args.val_data)
         train_dataset = load_dataset("csv", data_files=train_data, split="train")
         eval_dataset = load_dataset("csv", data_files=val_data, split="train")
+        train_dataset = train_dataset.map(create_prompt)
+        eval_dataset = eval_dataset.map(create_prompt)
+
     except Exception as e:
         raise Exception(f"something went wrong while reading data. {e}")
         # print(e)
