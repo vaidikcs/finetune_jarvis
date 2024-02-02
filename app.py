@@ -73,8 +73,8 @@ def main():
     # -------------------
     try:
         def create_prompt(prompt):
-            query = prompt['question']
-            answer = prompt['answer']
+            query = prompt['instruction']
+            answer = prompt['explanation']
             return {'text': f"Instruct: {query}.\nOutput: {answer}. <s>"}
         
         train_data = str(args.train_data)
