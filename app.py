@@ -1,6 +1,6 @@
 import argparse
 from datasets import Dataset
-import torch
+import torch,os
 import pandas as pd
 from datetime import datetime
 import transformers
@@ -67,13 +67,13 @@ def main():
             use_fast=False,  # needed for now, should be fixed soon
         )
         tokenizer.pad_token = tokenizer.eos_token
-     except Exception as e:
+    except Exception as e:
         raise Exception(f"something went wrong while downloading base model. {e}")
     # set_status(args['job_id'], 'dataset loading started')
     # -------------------
     try:
-        train_data = str(arg.train_data)
-        val_data = str(arg.val_data)
+        train_data = str(args.train_data)
+        val_data = str(args.val_data)
         train_dataset = load_dataset("csv", data_files=train_data, split="train")
         eval_dataset = load_dataset("csv", data_files=val_data, split="train")
     except Exception as e:
@@ -104,7 +104,7 @@ def main():
 
       # This was an appropriate max length for my dataset
     try:
-        max_length = int(arg.max_length)
+        max_length = int(args.max_length)
         
         def generate_and_tokenize_prompt2(prompt):
             result = tokenizer(
@@ -123,7 +123,7 @@ def main():
         raise Exception(f"something went wrong while parsing train data. {e}")
 
     # -----------------
-    rank = int(arg.lora_rank)
+    rank = int(args.lora_rank)
     try:
         config = LoraConfig(
             r=rank,
@@ -155,9 +155,9 @@ def main():
     output_dir = "./" + run_name
 
     try:
-        epochs = int(arg.epochs)
-        batch = int(arg.batch)
-        learning_rate = float(arg.learning_rate)
+        epochs = int(args.epochs)
+        batch = int(args.batch)
+        learning_rate = float(args.learning_rate)
         
         trainer = transformers.Trainer(
             model=model,
