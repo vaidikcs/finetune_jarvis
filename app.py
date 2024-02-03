@@ -63,7 +63,6 @@ def main():
             padding_side="left",
             token=token,
             add_eos_token=True,
-            load_in_8bit_fp32_cpu_offload=True,
             add_bos_token=True,
             use_fast=False,  # needed for now, should be fixed soon
         )
