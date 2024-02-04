@@ -42,6 +42,8 @@ def main():
         '--max_length', default='512', help='max length of training data.')
     parser.add_argument(
         '--hf_token', help='huggingface write token')
+    parser.add_argument(
+        '--temp_hf_token', help='huggingface write token')
 
     args = parser.parse_args()
 

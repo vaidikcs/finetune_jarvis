@@ -34,7 +34,8 @@ def main():
         '--max_length', default='512', help='max length of training data.')
     parser.add_argument(
         '--hf_token', help='huggingface write token')
-
+    parser.add_argument(
+        '--temp_hf_token', help='huggingface write token')
     args = parser.parse_args()
 
     token = str(args.hf_token)
@@ -50,7 +51,7 @@ def main():
 
         # Tokenizer
         llama_tokenizer = AutoTokenizer.from_pretrained(
-            base_model_name, trust_remote_code=True, use_auth_token="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")
+            base_model_name, trust_remote_code=True, use_auth_token=str(args.temp_hf_token))
         llama_tokenizer.pad_token = llama_tokenizer.eos_token
         llama_tokenizer.padding_side = "right"  # Fix for fp16
 
@@ -67,7 +68,7 @@ def main():
             base_model_name,
             quantization_config=quant_config,
             device_map={"": 0},
-            use_auth_token="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"
+            use_auth_token=str(args.temp_hf_token)
         )
         base_model.config.use_cache = False
         base_model.config.pretraining_tp = 1
