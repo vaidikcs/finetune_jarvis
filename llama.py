@@ -87,7 +87,7 @@ def main():
             p+="\n[/INST]\n"
             p+=e
             p+="</s>"
-            return {'prompts': p}
+            return {'text': p}
         
         train_data = str(args.train_data)
         val_data = str(args.val_data)
@@ -124,23 +124,23 @@ def main():
         # eval_dataset = Dataset.from_dict({'text': data[14:]})
 
       # This was an appropriate max length for my dataset
-    try:
-        max_length = int(args.max_length)
+    # try:
+    #     max_length = int(args.max_length)
         
-        def generate_and_tokenize_prompt2(prompt):
-            result = llama_tokenizer(
-                prompt['text'],
-                truncation=True,
-                max_length=max_length,
-                padding="max_length",
-            )
-            result["labels"] = result["input_ids"].copy()
-            return result
+    #     def generate_and_tokenize_prompt2(prompt):
+    #         result = llama_tokenizer(
+    #             prompt['text'],
+    #             truncation=True,
+    #             max_length=max_length,
+    #             padding="max_length",
+    #         )
+    #         result["labels"] = result["input_ids"].copy()
+    #         return result
     
-        train_dataset = train_dataset.map(generate_and_tokenize_prompt2)
-        eval_dataset = eval_dataset.map(generate_and_tokenize_prompt2)
-    except Exception as e:
-        raise Exception(f"something went wrong while parsing train data. {e}")
+    #     train_dataset = train_dataset.map(generate_and_tokenize_prompt2)
+    #     eval_dataset = eval_dataset.map(generate_and_tokenize_prompt2)
+    # except Exception as e:
+    #     raise Exception(f"something went wrong while parsing train data. {e}")
 
     # -----------------
     rank = int(args.lora_rank)
@@ -207,7 +207,7 @@ def main():
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
             peft_config=peft_parameters,
-            dataset_text_field="prompts",
+            dataset_text_field="text",
             tokenizer=llama_tokenizer,
             args=train_params
         )
