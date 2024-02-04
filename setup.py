@@ -29,7 +29,6 @@ def main():
         os.makedirs("/opt/conda/envs")
 
     create_python_env()
-    clone_repository()
 
 if __name__ == "__main__":
     main()
