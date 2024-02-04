@@ -49,7 +49,8 @@ def main():
         base_model_name = "meta-llama/Llama-2-7b-chat-hf"
 
         # Tokenizer
-        llama_tokenizer = AutoTokenizer.from_pretrained(base_model_name, trust_remote_code=True)
+        llama_tokenizer = AutoTokenizer.from_pretrained(
+            base_model_name, trust_remote_code=True, token=token)
         llama_tokenizer.pad_token = llama_tokenizer.eos_token
         llama_tokenizer.padding_side = "right"  # Fix for fp16
 
@@ -65,7 +66,8 @@ def main():
         base_model = AutoModelForCausalLM.from_pretrained(
             base_model_name,
             quantization_config=quant_config,
-            device_map={"": 0}
+            device_map={"": 0},
+            token=token
         )
         base_model.config.use_cache = False
         base_model.config.pretraining_tp = 1
