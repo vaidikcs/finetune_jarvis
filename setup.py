@@ -36,7 +36,7 @@ def main():
     subprocess.run(init_command, shell=True, check=True)
 
     # Activate the Python environment
-    activate_python_env(env_path)
+    # activate_python_env(env_path)
 
 
 if __name__ == "__main__":
