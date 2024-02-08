@@ -1,6 +1,6 @@
 import os
 import subprocess
-import urllib.request
+import urllib.request,shutil
 
 
 def download_anaconda_installer():
