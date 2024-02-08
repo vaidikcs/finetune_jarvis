@@ -1,6 +1,7 @@
 import os
 import subprocess
-import urllib.request,shutil
+import urllib.request
+import shutil
 
 
 def download_anaconda_installer():
@@ -13,18 +14,13 @@ def install_anaconda():
     subprocess.run(
         ["sudo", "bash", "Anaconda3-2021.05-Linux-x86_64.sh", "-b", "-p", "/opt/conda"])
     subprocess.run(["/opt/conda/bin/conda", "init"])
-    subprocess.run(["exec", "$SHELL"])
+    subprocess.run(["source", "$HOME/.bashrc"])
 
 
 def create_python_env():
-    # Activate the conda base environment
-    os.environ["PATH"] = "/opt/conda/bin:" + os.environ["PATH"]
-
-    # Create the python39 environment
-    subprocess.run(["conda", "create", "--prefix",
+    subprocess.run(["/opt/conda/bin/conda", "create", "--prefix",
                    "/opt/conda/envs/python39", "python=3.9", "-y"])
-    subprocess.run(["conda", "init", "bash"])
-    subprocess.run(["exec", "$SHELL"])
+    subprocess.run(["/opt/conda/bin/conda", "init", "bash"])
 
 
 def clone_repository():
