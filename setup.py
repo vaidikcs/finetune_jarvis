@@ -26,7 +26,7 @@ def activate_python_env(env_path):
 
 def main():
     env_path = "/home/myenv"
-    python_version = "3.10"
+    python_version = "3.9"
 
     # Create the Python environment
     create_python_env(env_path, python_version)
