@@ -1,22 +1,38 @@
 import subprocess
-import os
 
 
-def create_python_env():
-    # Install Miniconda (change URL if needed)
-    miniconda_installer = "Miniconda3-latest-Linux-x86_64.sh"
-    os.system(
-        f"wget https://repo.anaconda.com/miniconda/{miniconda_installer}")
-    os.system(f"bash {miniconda_installer} -b -p $HOME/miniconda")
-    os.environ["PATH"] += ":$HOME/miniconda/bin"
-    os.system("source ~/.bashrc")
+def create_python_env(env_path, python_version):
+    """
+    Create a new Python environment with the specified Python version using conda.
+    
+    Args:
+    - env_path (str): Path where the environment should be created.
+    - python_version (str): Version of Python for the environment.
+    """
+    command = f"conda create --prefix {env_path} python={python_version} -y"
+    subprocess.run(command, shell=True, check=True)
 
-    # Create Python 3.9 environment
-    os.system("conda create --name python39 python=3.9 -y")
+
+def activate_python_env(env_path):
+    """
+    Activate a Python environment using conda.
+    
+    Args:
+    - env_path (str): Path to the environment to activate.
+    """
+    command = f"conda activate {env_path}"
+    subprocess.run(command, shell=True, check=True)
 
 
 def main():
-    create_python_env()
+    env_path = "/home/myenv"
+    python_version = "3.9"
+
+    # Create the Python environment
+    create_python_env(env_path, python_version)
+
+    # Activate the Python environment
+    activate_python_env(env_path)
 
 
 if __name__ == "__main__":
