@@ -3,7 +3,7 @@ import sys
 import venv
 
 
-def create_python_env(env_path, python_version):
+def create_python_env(env_path):
     """
     Create a new Python environment with the specified Python version using venv.
     
@@ -11,8 +11,8 @@ def create_python_env(env_path, python_version):
     - env_path (str): Path where the environment should be created.
     - python_version (str): Version of Python for the environment.
     """
-    venv.create(env_path, system_site_packages=False, clear=False, with_pip=True, prompt=None, upgrade=False,
-                symlinks=False, base=None, without_pip=False, implementation=False, app_data=False, symlink=False, progress=None)
+    subprocess.run(["python3.9", "-m", "venv", env_path], check=True)
+
 
 
 def activate_python_env(env_path):
@@ -37,7 +37,7 @@ def main():
     python_version = "3.9"
 
     # Create the Python environment
-    create_python_env(env_path, python_version)
+    create_python_env(env_path)
 
     # Activate the Python environment
     # activate_python_env(env_path)
