@@ -221,7 +221,6 @@ def main():
             device_map="auto",
             trust_remote_code=True,
             load_in_8bit=True,
-        
             torch_dtype=torch.float16,
         )
         
