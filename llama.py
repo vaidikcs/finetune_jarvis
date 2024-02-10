@@ -226,7 +226,8 @@ def main():
     try:
         del fine_tuning, base_model
         print('saving trained model ...')
-
+        path = os.listdir(run_name)[-1]
+        path = run_name + '/'+path
         from peft import LoraConfig, AutoPeftModelForCausalLM
         tokenizer = AutoTokenizer.from_pretrained(path)
         model = AutoPeftModelForCausalLM.from_pretrained(
