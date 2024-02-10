@@ -148,6 +148,7 @@ def main():
     # -----------------
     rank = int(args.lora_rank)
     try:
+        from peft import LoraConfig
         peft_parameters = LoraConfig(
             lora_alpha=rank*2,
             r=rank,
