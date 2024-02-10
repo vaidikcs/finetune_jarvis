@@ -191,6 +191,7 @@ def main():
                 save_strategy="steps",       # Save the model checkpoint every logging step
                 save_steps=10, 
                 save_total_limit = 1,
+                report_to='none',
                 run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
             ),
             data_collator=transformers.DataCollatorForLanguageModeling(

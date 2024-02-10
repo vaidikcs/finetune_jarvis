@@ -199,6 +199,7 @@ def main():
             save_strategy="steps",       # Save the model checkpoint every logging step
             save_steps=10,
             save_total_limit=1,
+            report_to='none',
             lr_scheduler_type="cosine"
         )
     
