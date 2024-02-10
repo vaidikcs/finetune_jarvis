@@ -14,7 +14,8 @@ def create_venv(venv_dir, python_executable):
 
 def main():
     # Path to the Python 3.9 interpreter
-    python_3_9_executable = "/usr/bin/python3.9"
+    # Or use the full path obtained from 'which python3.9'
+    python_3_9_executable = "python3.9"
 
     # if len(sys.argv) != 2:
     #     print("Usage: python create_venv.py <venv_directory>")
