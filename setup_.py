@@ -3,9 +3,9 @@ import subprocess
 import sys
 
 
-def create_venv(venv_dir, python_executable):
+def create_venv(venv_dir):
     try:
-        subprocess.check_output([python_executable, '-m', 'venv', venv_dir])
+        subprocess.check_output([sys.executable, '-m', 'venv', venv_dir])
         print(f"Virtual environment created successfully at {venv_dir}")
     except subprocess.CalledProcessError:
         print("Error occurred while creating the virtual environment.")
@@ -13,16 +13,12 @@ def create_venv(venv_dir, python_executable):
 
 
 def main():
-    # Path to the Python 3.9 interpreter
-    # Or use the full path obtained from 'which python3.9'
-    python_3_9_executable = "python3.9"
-
     # if len(sys.argv) != 2:
     #     print("Usage: python create_venv.py <venv_directory>")
     #     sys.exit(1)
 
     venv_dir = "/home/myenv"
-    create_venv(venv_dir, python_3_9_executable)
+    create_venv(venv_dir)
 
 
 if __name__ == "__main__":
