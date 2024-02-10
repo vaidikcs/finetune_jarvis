@@ -47,6 +47,7 @@ def main():
     print(repo_name)
 
     try:
+        print('load base model ...')
         base_model_name = "meta-llama/Llama-2-7b-chat-hf"
 
         # Tokenizer
@@ -95,6 +96,7 @@ def main():
         eval_dataset = load_dataset("csv", data_files=val_data, split="train")
         train_dataset = train_dataset.map(create_prompt)
         eval_dataset = eval_dataset.map(create_prompt)
+        print('data loaded successfully ...')
 
     except Exception as e:
         raise Exception(f"something went wrong while reading data. {e}")
@@ -162,6 +164,7 @@ def main():
             bias="none",
             task_type="CAUSAL_LM"
         )
+        print('LoRA model loaded successfully ...')
 
     except Exception as e:
         raise Exception(f"something went wrong while setting up LoRA. {e}")
@@ -172,6 +175,7 @@ def main():
     base_model_name = "llama"
     run_name = base_model_name + "-" + project
     output_dir = "./" + run_name
+    print('training started ...')
 
     try:
         epochs = int(args.epochs)
@@ -219,6 +223,7 @@ def main():
     # set_status(args['job_id'], 'saving model')
     try:
         del fine_tuning, base_model
+        print('saving trained model successfully ...')
 
         from peft import LoraConfig, AutoPeftModelForCausalLM
         tokenizer = AutoTokenizer.from_pretrained(path)

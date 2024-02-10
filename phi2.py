@@ -56,6 +56,7 @@ def main():
     print(repo_name)
 
     try:
+        print('load base model ...')
         base_model_id = "SkunkworksAI/phi-2"
         model = AutoModelForCausalLM.from_pretrained(
             base_model_id, token=token, trust_remote_code=True, torch_dtype=torch.float16, load_in_8bit=True)
@@ -130,6 +131,8 @@ def main():
     
         tokenized_train_dataset = train_dataset.map(generate_and_tokenize_prompt2)
         tokenized_val_dataset = eval_dataset.map(generate_and_tokenize_prompt2)
+        print('data loaded successfully ...')
+
     except Exception as e:
         raise Exception(f"something went wrong while parsing train data. {e}")
 
@@ -151,7 +154,9 @@ def main():
         )
         model.config.gradient_checkpointing = False
         model = get_peft_model(model, config)
-        model = accelerator.prepare_model(model)  
+        model = accelerator.prepare_model(model)
+        print('LoRA model loaded successfully ...')
+
     except Exception as e:
         raise Exception(f"something went wrong while setting up LoRA. {e}")
     # print_trainable_parameters(model)
@@ -164,6 +169,7 @@ def main():
     base_model_name = "phi2"
     run_name = base_model_name + "-" + project
     output_dir = "./" + run_name
+    print('training started ...')
 
     try:
         epochs = int(args.epochs)
@@ -206,6 +212,9 @@ def main():
 
     # set_status(args['job_id'], 'saving model')
     try:
+        del trainer, model
+        print('saving trained model successfully ...')
+
         base_model_id = "SkunkworksAI/phi-2"#"microsoft/phi-2"
         base_model = AutoModelForCausalLM.from_pretrained(
             base_model_id,  # Phi2, same as before
@@ -219,7 +228,6 @@ def main():
         eval_tokenizer = AutoTokenizer.from_pretrained(base_model_id, add_bos_token=True, trust_remote_code=True, use_fast=False)
         eval_tokenizer.pad_token = eval_tokenizer.eos_token
     
-        del trainer, model
         from peft import PeftModel
         path = os.listdir(run_name)[-1]
         print(run_name+ '/'+path)
