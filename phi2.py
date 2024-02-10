@@ -213,7 +213,7 @@ def main():
     # set_status(args['job_id'], 'saving model')
     try:
         del trainer, model
-        print('saving trained model successfully ...')
+        print('saving trained model ...')
 
         base_model_id = "SkunkworksAI/phi-2"#"microsoft/phi-2"
         base_model = AutoModelForCausalLM.from_pretrained(

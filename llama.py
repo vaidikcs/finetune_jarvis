@@ -223,7 +223,7 @@ def main():
     # set_status(args['job_id'], 'saving model')
     try:
         del fine_tuning, base_model
-        print('saving trained model successfully ...')
+        print('saving trained model ...')
 
         from peft import LoraConfig, AutoPeftModelForCausalLM
         tokenizer = AutoTokenizer.from_pretrained(path)
